@@ -1,4 +1,4 @@
-APQ <- function(df, start) {
+apq <- function(df, start) {
 
   # Test for missing data frame argument
   if (missing(df)) {
@@ -17,6 +17,14 @@ APQ <- function(df, start) {
   # Identify the column number of the very first column of the APQ data frame
   # and call it the index
   index <- which(colnames(df) == start)
+
+  # Using the index as a reference point, if the number of columns following
+  # the index is greater than the total number of columns in the APQ data frame,
+  # it might mean that the data frame do not have the complete set of 42 items
+  # for the APQ
+  if (index + 41 > ncol(df)) {
+    stop("You do not have the complete set of 42 items for the APQ")
+  }
 
   # Store the items in the Involvement subscale as positions relative to the
   # index in a vector
