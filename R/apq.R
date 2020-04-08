@@ -11,6 +11,12 @@ apq <- function(df, start) {
          data frame in quotes here")
   }
 
+  # Test for the scenario when a non-existent column name is provided in the
+  # start argument
+  if (!start %in% names(df)) {
+    stop("Column names does not exist")
+  }
+
   # Convert df argument into a data frame
   df <- as.data.frame(df)
 
