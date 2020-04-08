@@ -1,7 +1,7 @@
 \name{apq}
 \alias{apq}
 %- Also NEED an '\alias' for EACH other topic documented here.
-\title{
+\title{Compute APQ subscales
 %%  ~~function to do ... ~~
 }
 \description{
