@@ -1,8 +1,8 @@
-# The cns function takes a data frame containing Connectedness to Nature (CNS) data and
-# outputs the same data frame with the addition of a new column containing the CNS
-# score. The first argument takes in a data frame containing the CNS data. The second
-# argument takes in the name of the column containing item 1 of the CNS. Name of the
-# column has to be enclosed with quotes ("").
+# The cns function takes a data frame containing Connectedness to Nature Scale
+# (CNS) data and outputs the same data frame with the addition of a new column
+# containing the CNS score. The first argument takes in a data frame containing
+# the CNS data. The second argument takes in the name of the column containing
+# item 1 of the CNS. Name of the column has to be enclosed with quotes ("").
 
 cns <- function(df, CNS_1) {
 
@@ -11,16 +11,22 @@ cns <- function(df, CNS_1) {
     stop("Data frame required. Please input data frame")
   }
 
-  # Test for missing MSPSS_1 argument
+  # Test for missing CNS_1 argument
   if (missing(CNS_1)) {
     stop("Please specify the column name of Q1, in quotes, of the CNS from your
          data frame here")
   }
 
   # Test for the scenario when a non-existent column name is provided in the
-  # MSPSS_1 argument
+  # CNS_1 argument
   if (!CNS_1 %in% names(df)) {
     stop("Column name does not exist")
+  }
+
+  # Test if there is no data in the data frame
+  if (nrow(df) == 0) {
+    stop("Your data frame does not contain any data. Please use a data frame
+         containing CNS data")
   }
 
   # Convert df argument into a data frame
@@ -28,7 +34,6 @@ cns <- function(df, CNS_1) {
 
   # Identify the column number of the CNS_1 argument and call it the index.
   index <- which(colnames(df) == CNS_1)
-
 
   # Using the index as a reference point, test whether the 13th column after
   # the index (representing CNS item 14) exceed the total number of columns
@@ -47,7 +52,8 @@ cns <- function(df, CNS_1) {
   # Reverse score item 14 and store the output in a new column called CNS_14r
   df[, "CNS_14r"] <- 6 - df[, index + 13]
 
-  # Compute the CNS score and store it in a new column called CNS_score
+  # Compute the CNS scores by averaging the scores across all items in the
+  # scale. Store the results in a new column called CNS_score
   df[, "CNS_score"] <- round(rowMeans(df[, c(index:(index + 2),
                                        which(colnames(df) == "CNS_4r"),
                                        (index + 4):(index + 10),
