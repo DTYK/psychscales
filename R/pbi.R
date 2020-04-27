@@ -89,7 +89,7 @@ pbi <- function(df, PBI_1, flip = FALSE) {
 
   # Compute the Mother Care subscale scores by summing up the items in the
   # m_care_vector. Store the results in a new column called mother_care
-  df[, "mother_care"] <- rowSums(df[, m_care_vector], na.rm = TRUE)
+  df[, "mother_care"] <- rowSums(df[, m_care_vector])
 
   # Store the column numbers of items belonging to the Mother Overprotection
   # subscale in a vector. For direct-scored items, obtain the column numbers by
@@ -107,7 +107,7 @@ pbi <- function(df, PBI_1, flip = FALSE) {
   # Compute the Mother Overprotection subscale scores by summing up the items in
   # the m_overprot_vector. Store the results in a new column called
   # mother_overprotection
-  df[, "mother_overprotection"] <- rowSums(df[, m_overprot_vector], na.rm = TRUE)
+  df[, "mother_overprotection"] <- rowSums(df[, m_overprot_vector])
 
   # Store the column numbers of items belonging to the Father Care subscale in
   # a vector. For direct-scored items, obtain the column numbers by adding the
@@ -124,7 +124,7 @@ pbi <- function(df, PBI_1, flip = FALSE) {
 
   # Compute the Father Care subscale scores by summing up the items in the
   # f_care_vector. Store the results in a new column called father_care
-  df[, "father_care"] <- rowSums(df[, f_care_vector], na.rm = TRUE)
+  df[, "father_care"] <- rowSums(df[, f_care_vector])
 
   # Store the column numbers of items belonging to the Father Overprotection
   # subscale in a vector. For direct-scored items, obtain the column numbers by
@@ -142,7 +142,7 @@ pbi <- function(df, PBI_1, flip = FALSE) {
   # Compute the Father Overprotection subscale scores by summing up the items in
   # the f_overprot_vector. Store the results in a new column called
   # father_overprotection
-  df[, "father_overprotection"] <- rowSums(df[, f_overprot_vector], na.rm = TRUE)
+  df[, "father_overprotection"] <- rowSums(df[, f_overprot_vector])
 
   # Using a for loop, remove the newly created reverse-scored columns using
   # the reverse_vector
