@@ -17,7 +17,7 @@ apq <- function(df, APQ_1) {
          data frame here")
   }
 
-  # Test for the scenario when a non-existent column name is provided in the
+  # Test for the scenario where a non-existent column name is provided in the
   # APQ_1 argument
   if (!APQ_1 %in% names(df)) {
     stop("Column name does not exist")
