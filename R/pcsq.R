@@ -11,16 +11,22 @@ pcsq <- function(df, PCSQ_1) {
     stop("Data frame required. Please input data frame")
   }
 
-  # Test for missing MSPSS_1 argument
+  # Test for missing PCSQ_1 argument
   if (missing(PCSQ_1)) {
     stop("Please specify the column name of Q1, in quotes, of the PCSQ from your
          data frame here")
   }
 
-  # Test for the scenario when a non-existent column name is provided in the
+  # Test for the scenario where a non-existent column name is provided in the
   # PCSQ_1 argument
   if (!PCSQ_1 %in% names(df)) {
     stop("Column name does not exist")
+  }
+
+  # Test for the scenario where there is no data in the data frame
+  if (nrow(df) == 0) {
+    stop("Your data frame does not contain any data. Please use a data frame
+         containing PCSQ data")
   }
 
   # Convert df argument into a data frame
@@ -37,53 +43,58 @@ pcsq <- function(df, PCSQ_1) {
     stop("You do not have the complete set of 14 items for the PCSQ")
   }
 
+  # Reverse score item 3 and store the output in a new column called PCSQ_3r
+  df[, "PCSQ_3r"] <- 6 - df[, index + 2]
+
+  # Reverse score item 9 and store the output in a new column called PCSQ_9r
+  df[, "PCSQ_9r"] <- 6 - df[, index + 8]
+
   # Store the items belonging to the Community Integration subscale as positions
-  # relative to the index in a vector
-  integration_vector <- c(0, 1, 3)
+  # relative to the index in a temporary vector. Add the index to each element
+  # of the temporary vector to obtain their actual column numbers and store the
+  # results in a vector
+  integration_vector <- c(index + c(0, 1, 3), which(colnames(df) == "PCSQ_3r"))
 
-  # Add the index to each element of the Community Integration subscale vector to
-  # obtain the actual column numbers in the data frame
-  indexed_integration <- integration_vector + index
-
-  # Using the above vector, obtain the mean of the items and store the result
-  # in a new column called integration
-  df[, "integration"] <- round(rowMeans(df[, indexed_integration], na.rm = TRUE), 2)
+  # Compute the Community Integration subscale scores by averaging the scores
+  # across all items in the integration vector. Store the results in a new column
+  # called integration
+  df[, "integration"] <- round(rowMeans(df[, integration_vector]), 2)
 
   # Store the items belonging to the Community Participation subscale as positions
-  # relative to the index in a vector
-  participation_vector <- c(2, 4, 5, 6, 7, 8)
+  # relative to the index in a temporary vector. Add the index to each element
+  # of the temporary vector to obtain their actual column numbers and store the
+  # results in a vector
+  participation_vector <- c(index + c(4, 5, 6, 7), which(colnames(df) == "PCSQ_9r"))
 
-  # Add the index to each element of the Community Participation subscale vector
-  # to obtain the actual column numbers in the data frame
-  indexed_participation <- participation_vector + index
-
-  # Using the above vector, obtain the mean of the items and store the result in
-  # a new column called participation
-  df[, "participation"] <- round(rowMeans(df[, indexed_participation], na.rm = TRUE), 2)
+  # Compute the Community Participation subscale scores by averaging the scores
+  # across all items in the participation vector. Store the results in a new
+  # column called participation
+  df[, "participation"] <- round(rowMeans(df[, participation_vector]), 2)
 
   # Store the items belonging to the Community Organizations subscale as positions
-  # relative to the index in a vector
-  organizations_vector <- c(9, 10, 11, 12, 13)
+  # relative to the index in a temporary vector. Add the index to each element
+  # of the temporary vector to obtain their actual column numbers and store the
+  # results in a vector
+  org_vector <- index + c(9, 10, 11, 12, 13)
 
-  # Add the index to each element of the Community Organizations subscale vector
-  # to obtain the actual column numbers in the data frame
-  indexed_organizations <- organizations_vector + index
-
-  # Using the above vector, obtain the mean of the items and store the result in
-  # a new column called organizations
-  df[, "organizations"] <- round(rowMeans(df[, indexed_organizations], na.rm = TRUE), 2)
+  # Compute the Community Organizations subscale scores by averaging the scores
+  # across all items in the org vector. Store the results in a new column called
+  # organizations
+  df[, "organizations"] <- round(rowMeans(df[, org_vector]), 2)
 
   # Store the items belonging to the Total scale as positions relative to the
-  # index in a vector
-  total_vector <- c(0:13)
+  # index in a temporary vector. Add the index to each element of the temporary
+  # vector to obtain their actual column numbers and store the results in a vector
+  total_vector <- c(index + c(0, 1, 3:7, 9:13), which(colnames(df) == "PCSQ_3r"),
+                    which(colnames(df) == "PCSQ_9r"))
 
-  # Add the index to each element of the Total scale vector to obtain the actual
-  # column numbers in the data frame
-  indexed_total <- total_vector + index
+  # Compute the Total scale scores by averaging the scores across all items in
+  # the total vector. Store the results in a new column called total
+  df[, "total"] <- round(rowMeans(df[, total_vector]), 2)
 
-  # Using the above vector, obtain the mean of the items and store the result in
-  # a new column called total
-  df[, "total"] <- round(rowMeans(df[, indexed_total], na.rm = TRUE), 2)
+  # Remove the reverse scored columns that were temporarily created for
+  # the computation of the CNS score
+  df[, c("PCSQ_3r", "PCSQ_9r")] <- NULL
 
   # Return the data frame with the newly created subscale columns
   return(df)
