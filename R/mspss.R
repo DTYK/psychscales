@@ -17,10 +17,16 @@ mspss <- function(df, MSPSS_1) {
          data frame here")
   }
 
-  # Test for the scenario when a non-existent column name is provided in the
+  # Test for the scenario where a non-existent column name is provided in the
   # MSPSS_1 argument
   if (!MSPSS_1 %in% names(df)) {
     stop("Column name does not exist")
+  }
+
+  # Test for the scenario where there is no data in the data frame
+  if (nrow(df) == 0) {
+    stop("Your data frame does not contain any data. Please use a data frame
+         containing MSPSS data")
   }
 
   # Convert df argument into a data frame
@@ -38,52 +44,42 @@ mspss <- function(df, MSPSS_1) {
   }
 
   # Store the items belonging to the Significant Other subscale as positions
-  # relative to the index in a vector
-  sig_other_vector <- c(0, 1, 4, 9)
+  # relative to the index in a temporary vector. Add the index to each element
+  # of the temporary vector to obtain their actual column numbers and store the
+  # results in a vector
+  sig_other_vector <- index + c(0, 1, 4, 9)
 
-  # Add the index to each element of the Significant Other subscale vector to
-  # obtain the actual column numbers in the data frame
-  indexed_sig_other <- sig_other_vector + index
+  # Compute the Significant Other subscale scores by averaging the scores across
+  # all items in the sig_other_vector. Store the results in a new column called
+  # sig_other
+  df[, "sig_other"] <- round(rowMeans(df[, sig_other_vector], na.rm = TRUE), 2)
 
-  # Using the above vector, obtain the mean of the items and store the result
-  # in a new column called sig_other
-  df[, "sig_other"] <- round(rowMeans(df[, indexed_sig_other], na.rm = TRUE), 2)
+  # Store the items belonging to the Family subscale as positions relative to the
+  # index in a temporary vector. Add the index to each element of the temporary
+  # vector to obtain their actual column numbers and store the results in a vector
+  family_vector <- index + c(2, 3, 7, 10)
 
-  # Store the items belonging to the Family subscale as positions relative to
-  # the index in a vector
-  family_vector <- c(2, 3, 7, 10)
+  # Compute the Family subscale scores by averaging the scores across all items
+  # in the family_vector. Store the results in a new column called family
+  df[, "family"] <- round(rowMeans(df[, family_vector], na.rm = TRUE), 2)
 
-  # Add the index to each element of the Family subscale vector to obtain the
-  # actual column numbers in the data frame
-  indexed_family <- family_vector + index
+  # Store the items belonging to the Friends subscale as positions relative to the
+  # index in a temporary vector. Add the index to each element of the temporary
+  # vector to obtain their actual column numbers and store the results in a vector
+  friends_vector <- index + c(5, 6, 8, 11)
 
-  # Using the above vector, obtain the mean of the items and store the result
-  # in a new column called family
-  df[, "family"] <- round(rowMeans(df[, indexed_family], na.rm = TRUE), 2)
-
-  # Store the items belonging to the Friends subscale as positions relative to
-  # the index in a vector
-  friends_vector <- c(5, 6, 8, 11)
-
-  # Add the index to each element of the Friends subscale vector to obtain the
-  # actual column numbers in the data frame
-  indexed_friends <- friends_vector + index
-
-  # Using the above vector, obtain the mean of the items and store the result
-  # in a new column called friends
-  df[, "friends"] <- round(rowMeans(df[, indexed_friends], na.rm = TRUE), 2)
+  # Compute the Friends subscale scores by averaging the scores across all items
+  # in the friends_vector. Store the results in a new column called friends
+  df[, "friends"] <- round(rowMeans(df[, friends_vector], na.rm = TRUE), 2)
 
   # Store the items belonging to the Total scale as positions relative to the
-  # index in a vector
-  total_vector <- c(0:11)
+  # index in a temporary vector. Add the index to each element of the temporary
+  # vector to obtain their actual column numbers and store the results in a vector
+  total_vector <- index + c(0:11)
 
-  # Add the index to each element of the Total scale vector to obtain the
-  # actual column numbers in the data frame
-  indexed_total <- total_vector + index
-
-  # Using the above vector, obtain the mean of the items and store the result
-  # in a new column called total
-  df[, "total"] <- round(rowMeans(df[, indexed_total], na.rm = TRUE), 2)
+  # Compute the Total scale scores by averaging the scores across all items
+  # in the total_vector. Store the results in a new column called total
+  df[, "total"] <- round(rowMeans(df[, total_vector], na.rm = TRUE), 2)
 
   # Return the data frame with the newly created subscale columns
   return(df)
