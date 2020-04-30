@@ -17,10 +17,16 @@ icu <- function(df, ICU_1) {
          data frame here")
   }
 
-  # Test for the scenario when a non-existent column name is provided in the
+  # Test for the scenario where a non-existent column name is provided in the
   # ICU_1 argument
   if (!ICU_1 %in% names(df)) {
     stop("Column name does not exist")
+  }
+
+  # Test for the scenario where there is no data in the data frame
+  if (nrow(df) == 0) {
+    stop("Your data frame does not contain any data. Please use a data frame
+         containing ICU data")
   }
 
   # Convert df argument into a data frame
@@ -70,7 +76,7 @@ icu <- function(df, ICU_1) {
 
   # Using the above vector, obtain the sum of the items and store the result
   # in a new column called callousness
-  df[, "callousness"] <- rowSums(df[, cal_vector], na.rm = TRUE)
+  df[, "callousness"] <- rowSums(df[, cal_vector])
 
   # Store the column numbers of items belonging to the Uncaring subscale in
   # a vector. Obtain the column numbers by searching for their names derived
@@ -86,7 +92,7 @@ icu <- function(df, ICU_1) {
 
   # Using the above vector, obtain the sum of the items and store the result in
   # a new column called uncaring
-  df[, "uncaring"] <- rowSums(df[, uncar_vector], na.rm = TRUE)
+  df[, "uncaring"] <- rowSums(df[, uncar_vector])
 
   # Store the column numbers of items belonging to the Unemotional subscale in
   # a vector. For direct-scored items, obtain the column numbers by adding the
@@ -100,7 +106,7 @@ icu <- function(df, ICU_1) {
 
   # Using the above vector, obtain the sum of the items and store the result in
   # a new column called unemotional
-  df[, "unemotional"] <- rowSums(df[, unemo_vector], na.rm = TRUE)
+  df[, "unemotional"] <- rowSums(df[, unemo_vector])
 
   # Using a for loop, remove the newly created reverse-scored columns using
   # the reverse_vector
